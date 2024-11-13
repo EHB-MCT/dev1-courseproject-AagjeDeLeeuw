@@ -22,3 +22,10 @@ function drawRainbowCircles(numberOfCircles, x = 0, y = 0) {
         Utils.strokeCircle(x, y, radius);
     }
 }
+
+drawBubbles();
+
+function drawBubbles() {
+    context.fillStyle = "blue"
+    Utils.fillCircle(width/2, height/2, 50)
+}
