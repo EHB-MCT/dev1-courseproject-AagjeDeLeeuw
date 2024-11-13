@@ -7,14 +7,18 @@ let width = context.canvas.width;
 let height = context.canvas.height;
 
 drawRainbowCircles(25);
+drawRainbowCircles(25, width, height);
 
-function drawRainbowCircles(numberOfCircles) {
+function drawRainbowCircles(numberOfCircles, x = 0, y = 0) {
+    let maxRadius = 750;
+
     for (let i = 0; i < numberOfCircles; i++) {
-        let radius = 750 / numberOfCircles
-        let hue = 300 / numberOfCircles;
-        context.strokeStyle = Utils.hsl(i * hue, 100, 50);
+        // Red is 0 and violet is 270
+        let hue = (i * 320) / numberOfCircles;
+        let radius = maxRadius - (i * maxRadius / numberOfCircles);
+
         context.lineWidth = 25;
-        Utils.strokeCircle(0, 0, 750 - i * radius);
-        console.log("Drawing circle " + i);
+        context.strokeStyle = Utils.hsl(hue, 100, 50);
+        Utils.strokeCircle(x, y, radius);
     }
 }
