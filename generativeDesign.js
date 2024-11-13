@@ -12,6 +12,8 @@ drawRainbowCircles(25, width, height);
 
 function drawRainbowCircles(numberOfCircles, x = 0, y = 0) {
     let maxRadius = 750;
+    context.fillStyle = "white";
+    Utils.fillCircle(x, y, maxRadius);
     for (let i = 0; i < numberOfCircles; i++) {
         // Red is 0 and violet is 270
         let hue = (i * 320) / numberOfCircles;
