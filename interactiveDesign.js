@@ -33,3 +33,18 @@ function drawBubbles(bubbles) {
 		Utils.fillCircle(x, y, Utils.randomNumber(10, 70));
 	}
 }
+
+signature();
+
+function signature() {
+	let size = 50;
+	context.fillStyle = "black";
+	context.fillRect(width - 300, height - 300, width, height);
+	context.fillStyle = "#ae73d9";
+	context.fillRect(width - 225, height - 225, size, size);
+	context.fillRect(width - 125, height - 225, size, size);
+	context.fillRect(width - 225, height - 125, size, size);
+	context.fillRect(width - 125, height - 125, size, size);
+	context.fillRect(width - 275, height - 75, 2 * size, size);
+	context.fillRect(width - 125, height - 75, 2 * size, size);
+}
