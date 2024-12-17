@@ -5,13 +5,35 @@ import * as Utils from "./utils.js";
 
 let width = context.canvas.width;
 let height = context.canvas.height;
+let bubbles = [];
 
 drawBubbles(250);
-drawRainbowCircles(25);
+
+function drawBubbles(numberOfBubbles) {
+	for (let i = 0; i < numberOfBubbles; i++) {
+		makeBubble();
+	}
+	for (let i = 0; i < bubbles.length; i++) {
+		let bubble = bubbles[i];
+		context.fillStyle = Utils.hsla(bubble.color, 100, 50, (2 / 3) * 100);
+		Utils.fillCircle(bubble.x, bubble.y, bubble.radius);
+	}
+}
+
+function makeBubble() {
+	bubbles.push({
+		x: Utils.randomNumber(0, width),
+		y: Utils.randomNumber(0, height),
+		radius: Utils.randomNumber(10, 70),
+		color: Utils.randomNumber(190, 240),
+	});
+}
+
 drawRainbowCircles(25, width, height);
+drawRainbowCircles(25);
 
 function drawRainbowCircles(numberOfCircles, x = 0, y = 0) {
-	let maxRadius = 750;
+	let maxRadius = Math.min(width * 0.75, height * 0.75);
 	context.fillStyle = "white";
 	Utils.fillCircle(x, y, maxRadius);
 	for (let i = 0; i < numberOfCircles; i++) {
@@ -24,20 +46,9 @@ function drawRainbowCircles(numberOfCircles, x = 0, y = 0) {
 	}
 }
 
-function drawBubbles(bubbles) {
-	for (let i = 0; i < bubbles; i++) {
-		let hue = Utils.randomNumber(200, 260);
-		context.fillStyle = Utils.hsla(hue, 100, 50, (2 / 3) * 100);
-		let x = Utils.randomNumber(0, width);
-		let y = Utils.randomNumber(0, height);
-		Utils.fillCircle(x, y, Utils.randomNumber(10, 70));
-	}
-}
+signature(50);
 
-signature();
-
-function signature() {
-	let size = 50;
+function signature(size) {
 	context.fillStyle = "black";
 	context.fillRect(width - 300, height - 300, width, height);
 	context.fillStyle = "#ae73d9";
