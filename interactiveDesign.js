@@ -34,17 +34,13 @@ makeBubbles(250);
 
 function makeBubbles(numberOfBubbles) {
 	for (let i = 0; i < numberOfBubbles; i++) {
-		makeBubble();
+		bubbles.push({
+			x: Utils.randomNumber(0, width),
+			y: Utils.randomNumber(0, height),
+			radius: Utils.randomNumber(10, 70),
+			color: Utils.randomNumber(190, 240),
+		});
 	}
-}
-
-function makeBubble() {
-	bubbles.push({
-		x: Utils.randomNumber(0, width),
-		y: Utils.randomNumber(0, height),
-		radius: Utils.randomNumber(10, 70),
-		color: Utils.randomNumber(190, 240),
-	});
 }
 
 function drawBubbles() {
@@ -71,20 +67,14 @@ function makeRainbows() {
 
 	for (let i = 0; i < rainbows.length; i++) {
 		for (let j = numberOfCircles; j >= 0; j--) {
-			rainbows[i].circles.push(makeCircle(rainbows[i].x, rainbows[i].y, j));
+			rainbows[i].circles.push({
+				// Red is 0 and violet is 270
+				color: (j * 320) / numberOfCircles,
+				opacity: defaultOpacity,
+				radius: maxRadius - (j * maxRadius) / numberOfCircles,
+			});
 		}
 	}
-}
-
-function makeCircle(x, y, i) {
-	return {
-		x: x,
-		y: y,
-		// Red is 0 and violet is 270
-		color: (i * 320) / numberOfCircles,
-		opacity: defaultOpacity,
-		radius: maxRadius - (i * maxRadius) / numberOfCircles,
-	};
 }
 
 function drawRainbowCircles() {
@@ -96,7 +86,7 @@ function drawRainbowCircles() {
 			let circle = rainbow.circles[j];
 			context.lineWidth = lineWidth;
 			context.strokeStyle = Utils.hsla(circle.color, 100, 50, circle.opacity);
-			Utils.strokeCircle(circle.x, circle.y, circle.radius);
+			Utils.strokeCircle(rainbow.x, rainbow.y, circle.radius);
 		}
 	}
 }
@@ -106,17 +96,41 @@ animate();
 function animate() {
 	context.clearRect(0, 0, width, height);
 
-	let current = index % numberOfCircles;
-	let previous = (index - 1 + numberOfCircles) % numberOfCircles;
+	let prePrevious = ((index - 2 + numberOfCircles) % numberOfCircles) + 1;
+	let previous = ((index - 1 + numberOfCircles) % numberOfCircles) + 1;
+	let current = (index % numberOfCircles) + 1;
+	let next = ((index + 1) % numberOfCircles) + 1;
+	let postNext = ((index + 2) % numberOfCircles) + 1;
 
 	for (let i = 0; i < rainbows.length; i++) {
+		rainbows[i].circles[prePrevious].opacity = defaultOpacity;
+		rainbows[i].circles[previous].opacity =
+			defaultOpacity + (100 - defaultOpacity) / 2;
 		rainbows[i].circles[current].opacity = 100;
-		rainbows[i].circles[previous].opacity = defaultOpacity;
+		rainbows[i].circles[next].opacity =
+			defaultOpacity + (100 - defaultOpacity) / 2;
+		rainbows[i].circles[postNext].opacity = defaultOpacity;
+	}
+
+	for (let i = 0; i < bubbles.length; i++) {
+		bubbles[i].x += Utils.randomNumber(-1, 0);
+		bubbles[i].y += Utils.randomNumber(0, 1);
+		if (bubbles[i].x < 0) {
+			bubbles[i].x = width + bubbles[i].radius;
+		} else if (bubbles[i].x > width + bubbles[i].radius) {
+			bubbles[i].x = 0;
+		}
+		if (bubbles[i].y < 0) {
+			bubbles[i].y = height + bubbles[i].radius;
+		} else if (bubbles[i].y > height + bubbles[i].radius) {
+			bubbles[i].y = 0;
+		}
 	}
 
 	drawBubbles();
 	drawRainbowCircles();
-    signature(50);
+	signature(50);
+
 	index++;
 	requestAnimationFrame(animate);
 }
