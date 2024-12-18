@@ -10,7 +10,7 @@ import * as Utils from "./utils.js";
 let width = context.canvas.width;
 let height = context.canvas.height;
 
-let index = 0;
+let frame = 0;
 let lastTime = 0;
 
 let directionX = 1;
@@ -146,14 +146,14 @@ function moveAndColorBubbles(eventData) {
 function animate(currentTime) {
 	context.clearRect(0, 0, width, height);
 
-	if (currentTime - lastTime > 1000 / 18) {
+	if (currentTime - lastTime > 1000 / 12) {
 		lastTime = currentTime;
 
-		let prePrevious = ((index - 2 + numberOfCircles) % numberOfCircles) + 1;
-		let previous = ((index - 1 + numberOfCircles) % numberOfCircles) + 1;
-		let current = (index % numberOfCircles) + 1;
-		let next = ((index + 1) % numberOfCircles) + 1;
-		let postNext = ((index + 2) % numberOfCircles) + 1;
+		let prePrevious = ((frame - 2 + numberOfCircles) % numberOfCircles) + 1;
+		let previous = ((frame - 1 + numberOfCircles) % numberOfCircles) + 1;
+		let current = (frame % numberOfCircles) + 1;
+		let next = ((frame + 1) % numberOfCircles) + 1;
+		let postNext = ((frame + 2) % numberOfCircles) + 1;
 
 		for (let i = 0; i < rainbows.length; i++) {
 			rainbows[i].circles[prePrevious].opacity = defaultOpacity;
@@ -164,7 +164,7 @@ function animate(currentTime) {
 				defaultOpacity + (100 - defaultOpacity) / 2;
 			rainbows[i].circles[postNext].opacity = defaultOpacity;
 		}
-		index++;
+		frame++;
 	}
 
 	for (let i = 0; i < bubbles.length; i++) {
