@@ -11,6 +11,7 @@ let width = context.canvas.width;
 let height = context.canvas.height;
 
 let index = 0;
+let lastTime = 0;
 
 let directionX = 1;
 let directionY = 1;
@@ -43,7 +44,7 @@ function signature(size) {
 }
 
 function makeBubbles(numberOfBubbles) {
-	let colorBubbles = Utils.randomNumber(0, 360)
+	let colorBubbles = Utils.randomNumber(0, 360);
 	for (let i = 0; i < numberOfBubbles; i++) {
 		bubbles.push({
 			x: Utils.randomNumber(0, width),
@@ -142,37 +143,42 @@ function moveAndColorBubbles(eventData) {
 	}
 }
 
-function animate() {
+function animate(currentTime) {
 	context.clearRect(0, 0, width, height);
 
-	let prePrevious = ((index - 2 + numberOfCircles) % numberOfCircles) + 1;
-	let previous = ((index - 1 + numberOfCircles) % numberOfCircles) + 1;
-	let current = (index % numberOfCircles) + 1;
-	let next = ((index + 1) % numberOfCircles) + 1;
-	let postNext = ((index + 2) % numberOfCircles) + 1;
+	if (currentTime - lastTime > 1000 / 18) {
+		lastTime = currentTime;
 
-	for (let i = 0; i < rainbows.length; i++) {
-		rainbows[i].circles[prePrevious].opacity = defaultOpacity;
-		rainbows[i].circles[previous].opacity =
-			defaultOpacity + (100 - defaultOpacity) / 2;
-		rainbows[i].circles[current].opacity = 100;
-		rainbows[i].circles[next].opacity =
-			defaultOpacity + (100 - defaultOpacity) / 2;
-		rainbows[i].circles[postNext].opacity = defaultOpacity;
+		let prePrevious = ((index - 2 + numberOfCircles) % numberOfCircles) + 1;
+		let previous = ((index - 1 + numberOfCircles) % numberOfCircles) + 1;
+		let current = (index % numberOfCircles) + 1;
+		let next = ((index + 1) % numberOfCircles) + 1;
+		let postNext = ((index + 2) % numberOfCircles) + 1;
+
+		for (let i = 0; i < rainbows.length; i++) {
+			rainbows[i].circles[prePrevious].opacity = defaultOpacity;
+			rainbows[i].circles[previous].opacity =
+				defaultOpacity + (100 - defaultOpacity) / 2;
+			rainbows[i].circles[current].opacity = 100;
+			rainbows[i].circles[next].opacity =
+				defaultOpacity + (100 - defaultOpacity) / 2;
+			rainbows[i].circles[postNext].opacity = defaultOpacity;
+		}
+		index++;
 	}
 
 	for (let i = 0; i < bubbles.length; i++) {
 		bubbles[i].x += directionX;
 		bubbles[i].y += directionY;
-		if (bubbles[i].x < 0) {
+		if (bubbles[i].x < 0 - bubbles[i].radius) {
 			bubbles[i].x = width + bubbles[i].radius;
 		} else if (bubbles[i].x > width + bubbles[i].radius) {
-			bubbles[i].x = 0;
+			bubbles[i].x = 0 - bubbles[i].radius;
 		}
-		if (bubbles[i].y < 0) {
+		if (bubbles[i].y < 0 - bubbles[i].radius) {
 			bubbles[i].y = height + bubbles[i].radius;
 		} else if (bubbles[i].y > height + bubbles[i].radius) {
-			bubbles[i].y = 0;
+			bubbles[i].y = 0 - bubbles[i].radius;
 		}
 	}
 
@@ -180,6 +186,5 @@ function animate() {
 	drawRainbowCircles();
 	signature(50);
 
-	index++;
 	requestAnimationFrame(animate);
 }
