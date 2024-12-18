@@ -8,6 +8,9 @@ let height = context.canvas.height;
 
 let index = 0;
 
+let directionX = 1;
+let directionY = 1;
+
 let numberOfCircles = 25;
 let lineWidth = 25;
 let maxRadius = Math.min((width * 3) / 4, (height * 3) / 4);
@@ -91,6 +94,29 @@ function drawRainbowCircles() {
 	}
 }
 
+window.onmousemove = moveBubbles;
+
+/**
+ *
+ * @param{MouseEvent} eventData
+ */
+
+function moveBubbles(eventData) {
+	if (eventData.pageX < width / 2 && eventData.pageY < height / 2) {
+		directionX = -1;
+		directionY = -1;
+	} else if (eventData.pageX > width / 2 && eventData.pageY < height / 2) {
+		directionX = 1;
+		directionY = -1;
+	} else if (eventData.pageX < width / 2 && eventData.pageY > height / 2) {
+		directionX = -1;
+		directionY = 1;
+	} else {
+		directionX = 1;
+		directionY = 1;
+	}
+}
+
 animate();
 
 function animate() {
@@ -113,8 +139,8 @@ function animate() {
 	}
 
 	for (let i = 0; i < bubbles.length; i++) {
-		bubbles[i].x += Utils.randomNumber(-1, 0);
-		bubbles[i].y += Utils.randomNumber(0, 1);
+		bubbles[i].x += directionX;
+		bubbles[i].y += directionY;
 		if (bubbles[i].x < 0) {
 			bubbles[i].x = width + bubbles[i].radius;
 		} else if (bubbles[i].x > width + bubbles[i].radius) {
