@@ -23,7 +23,12 @@ let defaultOpacity = 50;
 let bubbles = [];
 let rainbows = [];
 
+window.onmousemove = moveAndColorBubbles;
+
 signature(50);
+makeBubbles(250);
+makeRainbows();
+animate();
 
 function signature(size) {
 	context.fillStyle = "black";
@@ -37,15 +42,14 @@ function signature(size) {
 	context.fillRect(width - 125, height - 75, 2 * size, size);
 }
 
-makeBubbles(250);
-
 function makeBubbles(numberOfBubbles) {
+	let colorBubbles = Utils.randomNumber(0, 360)
 	for (let i = 0; i < numberOfBubbles; i++) {
 		bubbles.push({
 			x: Utils.randomNumber(0, width),
 			y: Utils.randomNumber(0, height),
 			radius: Utils.randomNumber(10, 70),
-			color: Utils.randomNumber(190, 240),
+			color: colorBubbles,
 		});
 	}
 }
@@ -57,8 +61,6 @@ function drawBubbles() {
 		Utils.fillCircle(bubble.x, bubble.y, bubble.radius);
 	}
 }
-
-makeRainbows();
 
 function makeRainbows() {
 	rainbows.push({
@@ -98,14 +100,12 @@ function drawRainbowCircles() {
 	}
 }
 
-window.onmousemove = moveBubbles;
-
 /**
  *
  * @param{MouseEvent} eventData
  */
 
-function moveBubbles(eventData) {
+function moveAndColorBubbles(eventData) {
 	if (eventData.pageX < width / 2 && eventData.pageY < height / 2) {
 		directionX = -1;
 		directionY = -1;
@@ -141,8 +141,6 @@ function moveBubbles(eventData) {
 		}
 	}
 }
-
-animate();
 
 function animate() {
 	context.clearRect(0, 0, width, height);
